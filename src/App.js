@@ -1,23 +1,25 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom'
+import ProjectNews from './components/ProjectNews';
+import PlanningNews from './components/PlanningNews';
+import MarketNews from './components/MarketNews';
+import ExteriorAndInterior from './components/ExteriorAndInterior';
+import DetailNews from './components/DetailNews';
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+       <Router>
+         <Routes>
+          <Route path='/' element={<ProjectNews />} />
+          <Route path='/project-news/:pageNumber' element={<ProjectNews />} />
+          <Route path='/planning-news' element={<PlanningNews />} />
+          <Route path='/market-news' element={<MarketNews />} />
+          <Route path='/exterior-and-interior' element={<ExteriorAndInterior />} />
+          <Route path='/detail-news/:id' element={<DetailNews />} />
+         </Routes>
+       </Router>
     </div>
   );
 }
