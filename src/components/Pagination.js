@@ -19,7 +19,6 @@ function Pagination({ postsPerPage, totalPosts, paginate }) {
           <li
             key={pageNumber}
             onClick={() => {
-              navigate(`/project-news/${pageNumber}`);
               paginate(pageNumber);
             }}
             className="page-link"

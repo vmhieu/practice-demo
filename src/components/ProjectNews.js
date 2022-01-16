@@ -2,37 +2,35 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Pagination from './Pagination';
 import "bootstrap/dist/css/bootstrap.css";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts } from '../redux/actions/Actions';
 
 function ProjectNews(props) {
     const baseUrl = 'https://apis.resta.vn/erest-listing/news'
-     const category = 'projectNews';
-
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage, setPostsPerPage] = useState(4);
+    const [postsPerPage] = useState(4);
 
     const posts = useSelector((state) => state.allPosts.posts)
     const dispatch = useDispatch();
-    
+     const category = useLocation().pathname.slice(1);
+
     useEffect(() =>{
         const fetchData = async () => {
-            const result = await axios(`${baseUrl}?category=${category}`);
+            const end = currentPage * postsPerPage;
+            const start = end - postsPerPage;  
+            const result = await axios(`${baseUrl}?category=${category}&_start=${start}&_end=${end}`);
             dispatch(setPosts(result.data.data));
         }
         fetchData();
-    }, []);
-
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-    console.log('currentPosts', currentPosts);
-    const paginate = (pageNumber) => setCurrentPage(pageNumber)
+    }, [category, currentPage]);
+    const paginate = (pageNumber) =>{
+        setCurrentPage(pageNumber)
+    } 
     const navigate = useNavigate();
     
+    console.log('cata', category);
     console.log('aab', posts);
-   
     
     return (
         
@@ -41,7 +39,7 @@ function ProjectNews(props) {
                 <div className="col-lg-9">
                     <div className="row">
                       
-                    {currentPosts.map((post, id) => {
+                    {posts.map((post, id) => {
                     return (
                     <>
                     <div className="col-md-6" key={id} onClick={() => {navigate(`/detail-news/${post.id}`)}} style={{cursor: 'pointer'}}>
@@ -53,14 +51,14 @@ function ProjectNews(props) {
                     
                     })}
                     </div>
-                    <Pagination postsPerPage={postsPerPage} totalPosts={posts.length} paginate={paginate}/> 
+                    <Pagination postsPerPage={postsPerPage} totalPosts={24} paginate={paginate}/> 
                 </div>
                 <div className="col-lg-3" style={{marginTop: '30px'}}>
                     <ul className="text-start" style={{cursor: 'pointer'}}>
-                        <li onClick={() => {navigate('/project-news/:pageNumber')}} >Tin thị trường</li>
-                        <li onClick={() => {navigate('/planning-news')}}>Thông tin quy hoạch</li>
-                        <li onClick={() => {navigate('/exterior-and-interior')}}>Nội - Ngoại thất</li>
-                        <li onClick={() => {navigate('/market-news')}}>Tin quảng cáo</li>
+                        <li onClick={() => {navigate('/projectNews')}} >Tin thị trường</li>
+                        <li onClick={() => {navigate('/planningNews')}}>Thông tin quy hoạch</li>
+                        <li onClick={() => {navigate('/exteriorAndInterior')}}>Nội - Ngoại thất</li>
+                        <li onClick={() => {navigate('/marketNews')}}>Tin quảng cáo</li>
                     </ul>
                 </div>
             </div>     
